@@ -8,7 +8,7 @@ const app = express()
 const port = 8080
 
 
-let obj = { name: "John", age: 30, city: "New York" };
+let obj = {array : [{id:0,name: "gizi"},{id:1, name: "józsi"},{id:2, name: "bali"},{id:3, name:"dani"}]};
 let myJSON = JSON.stringify(obj);
 
 
