@@ -7,6 +7,8 @@ const express = require('express')
 const app = express()
 const port = 8080
 
+const mongoose = require('mongoose');
+
 
 let obj = {array : [{id:0,name: "gizi"},{id:1, name: "józsi"},{id:2, name: "bali"},{id:3, name:"dani"}]};
 let myJSON = JSON.stringify(obj);
