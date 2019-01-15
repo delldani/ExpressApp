@@ -38,31 +38,33 @@ let todo = mongoose.model('todo', todoSchema);
 
 app.get('/', (req, res) =>{ 
 
-      todo.find(function (err, todo) {
-        if (err) return console.error(err);
-
-        let obj = {array : todo};
-        let myJSON = JSON.stringify(obj);
-        res.send(myJSON);
-      });
+        todo.find(function (err, todo) {
+          if (err) return console.error(err);
+          let obj = {array : todo};
+          let myJSON = JSON.stringify(obj);
+          res.send(myJSON);
+        });
 
 });
 
 app.post('/', function (req, res) {
 
    
-   let r =  req.body;
-  
-   console.log( r.array[0].name);
-   res.send("ok");
+        let data =  req.body;
+        
+        console.log( data.array[0].name);
+        res.send("ok");
 
-   let array = new todo(r.array);
-   array.save(function (err, dani) {
-   if (err) return console.error(err);
-   });
+        todo.deleteMany({}, function (err) {
+          if (err) return handleError(err);
+        });
 
 
-  });
+        todo.insertMany(data.array, function(err) {
+          if (err) return handleError(err);
+        });
+
+});
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
