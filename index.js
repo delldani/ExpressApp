@@ -51,7 +51,8 @@ app.post('/', function (req, res) {
 
    
         let data =  req.body;
-        
+
+       
         console.log( data.array[0].name);
         res.send("ok");
 
