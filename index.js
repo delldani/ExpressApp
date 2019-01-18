@@ -16,14 +16,25 @@ app.use(bodyParser.json());
 
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/todo', {useNewUrlParser: true});
+let conn = mongoose.createConnection('mongodb://localhost:27017/todo', {useNewUrlParser: true});
+let conn2 = mongoose.createConnection('mongodb://localhost:27017/login', {useNewUrlParser: true});
 
 let todoSchema = new mongoose.Schema({
   id : String ,
   name : String
 });
 
-let todo = mongoose.model('todo', todoSchema);
+let todo = conn.model('todo', todoSchema);
+
+
+
+
+// let todoSchema = new mongoose.Schema({
+//   id : String ,
+//   name : String
+// });
+
+// let todo = mongoose.model('todo', todoSchema);
 
 // let dani = new todo({ id : 1 , name: 'dani' });
 
@@ -47,8 +58,46 @@ app.get('/', (req, res) =>{
 
 });
 
-app.post('/', function (req, res) {
 
+
+
+
+app.post('/login', (req, res) =>{ 
+
+
+let loginSchema = new mongoose.Schema({
+  user : String ,
+  password : String
+});
+
+let login = mongoose.model('users', loginSchema);
+
+
+  let data =  req.body;
+
+       
+  console.log( data.username);
+  console.log(data.password);
+  res.send("ok");
+
+
+
+// find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
+login.findOne({ 'username': data.username }, 'username password', function (err, person) {
+  if (err) return handleError(err);
+  // Prints "Space Ghost is a talk show host".
+  console.log(person.username);
+});
+
+});
+
+
+
+
+
+
+
+app.post('/', function (req, res) {
    
         let data =  req.body;
 
