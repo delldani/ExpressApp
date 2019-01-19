@@ -66,11 +66,11 @@ app.post('/login', (req, res) =>{
 
 
 let loginSchema = new mongoose.Schema({
-  user : String ,
+  username : String ,
   password : String
 });
 
-let login = mongoose.model('users', loginSchema);
+let login = mongoose.model('login', loginSchema);
 
 
   let data =  req.body;
@@ -83,7 +83,7 @@ let login = mongoose.model('users', loginSchema);
 
 
 // find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
-login.findOne({ 'username': data.username }, 'username password', function (err, person) {
+login.findOne({ 'username': 'jani' }, 'username password', function (err, person) {
   if (err) return handleError(err);
   // Prints "Space Ghost is a talk show host".
   console.log(person.username);
