@@ -27,12 +27,16 @@ let todoSchema = new mongoose.Schema({
 let todo = conn.model('todo', todoSchema);
 
 
+let loginSchema = new mongoose.Schema({
+  username : String ,
+  password : String
+});
+
+let login = conn2.model('login', loginSchema);
 
 
-// let todoSchema = new mongoose.Schema({
-//   id : String ,
-//   name : String
-// });
+
+
 
 // let todo = mongoose.model('todo', todoSchema);
 
@@ -64,29 +68,20 @@ app.get('/', (req, res) =>{
 
 app.post('/login', (req, res) =>{ 
 
-
-let loginSchema = new mongoose.Schema({
-  username : String ,
-  password : String
-});
-
-let login = mongoose.model('login', loginSchema);
-
-
   let data =  req.body;
 
-       
   console.log( data.username);
   console.log(data.password);
-  res.send("ok");
+  
+  res.send("minden ok");
 
 
 
 // find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
-login.findOne({ 'username': 'jani' }, 'username password', function (err, person) {
+login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
   if (err) return handleError(err);
   // Prints "Space Ghost is a talk show host".
-  console.log(person.username);
+  console.log(person.password);
 });
 
 });
