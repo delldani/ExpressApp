@@ -6,6 +6,8 @@ const express = require('express')
 const app = express()
 const port = 8080
 
+const jwt = require('jsonwebtoken');
+
 app.use(cors());
 app.use(
   bodyParser.urlencoded({
@@ -36,8 +38,6 @@ let login = conn2.model('login', loginSchema);
 
 
 
-
-
 // let todo = mongoose.model('todo', todoSchema);
 
 // let dani = new todo({ id : 1 , name: 'dani' });
@@ -53,36 +53,62 @@ let login = conn2.model('login', loginSchema);
 
 app.get('/', (req, res) =>{ 
 
-        todo.find(function (err, todo) {
-          if (err) return console.error(err);
-          let obj = {array : todo};
-          let myJSON = JSON.stringify(obj);
-          res.send(myJSON);
-        });
+
+            const bearerHeader = req.headers['authorization'];
+              console.log(bearerHeader);
+
+              jwt.verify(bearerHeader, 'secretkey', (err, authData) => {
+                if(err) {
+                  res.sendStatus(403);
+                } else {
+                
+                  todo.find(function (err, todo) {
+                    if (err) return console.error(err);
+                    let obj = {array : todo};
+                    let myJSON = JSON.stringify(obj);
+                    res.send(myJSON);
+
+                  });
+                }
+
+            });
 
 });
-
-
 
 
 
 app.post('/login', (req, res) =>{ 
 
-  let data =  req.body;
+          let data =  req.body;
 
-  console.log( data.username);
-  console.log(data.password);
-  
-  res.send("minden ok");
+          console.log( data.username);
+          console.log(data.password);
+          
+          // res.send("minden ok");
 
 
 
-// find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
-login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
-  if (err) return handleError(err);
-  // Prints "Space Ghost is a talk show host".
-  console.log(person.password);
-});
+        login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
+          if (err) return handleError(err);
+        
+          if(!person)console.log("nincs ilyen elem");
+          else{
+                  const user = {
+                    username: person.username,
+                    password: person.password
+                  }
+
+                  jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
+                    res.json({
+                      token
+                    });
+                  });
+
+                console.log(person.password);
+          }
+
+        });
+
 
 });
 
