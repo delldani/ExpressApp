@@ -77,14 +77,14 @@ function actualUser(req)
 
 app.get('/', (req, res) =>{ 
 
-              const token = req.headers['authorization'];
+              // const token = req.headers['authorization'];
 
               let todoUser = actualUser(req);
  
-              jwt.verify(token, 'secretkey', (err, authData) => {
-                if(err) {
-                  res.sendStatus(403);
-                } else {
+              // jwt.verify(token, 'secretkey', (err, authData) => {
+              //   if(err) {
+              //     res.sendStatus(403);
+              //   } else {
                 
                   todo.find({username : todoUser},function (err, todo) {
                     if (err) return console.error(err);
@@ -93,9 +93,9 @@ app.get('/', (req, res) =>{
                     res.send(myJSON);
                   });
 
-                }
-            });
-
+            //     }
+            // });
+            console.log("lefut");
 });
 
 
@@ -103,35 +103,35 @@ app.get('/', (req, res) =>{
 app.post('/login', (req, res) =>{ 
 
 
-          let data =  req.body;
+        //   let data =  req.body;
 
-          console.log( data.username);
-          console.log(data.password);
+        //   console.log( data.username);
+        //   console.log(data.password);
           
         
 
 
 
-        login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
-          if (err) return handleError(err);
+        // login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
+        //   if (err) return handleError(err);
         
-          if(!person)console.log("nincs ilyen elem");
-          else{
-                  const user = {
-                    username: data.username,
-                    password: data.password
-                  };
+        //   if(!person)console.log("nincs ilyen elem");
+        //   else{
+        //           const user = {
+        //             username: data.username,
+        //             password: data.password
+        //           };
 
-                  jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
-                    res.json({
-                      token
-                    });
-                  });
+        //           jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
+        //             res.json({
+        //               token
+        //             });
+        //           });
 
-                console.log(person.password);
-          }
+        //         console.log(person.password);
+        //   }
 
-        });
+        // });
 
 
 });
