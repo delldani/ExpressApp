@@ -8,6 +8,8 @@ const port = 8080
 
 const jwt = require('jsonwebtoken');
 
+const atob = require('atob');
+
 app.use(cors());
 app.use(
   bodyParser.urlencoded({
@@ -15,6 +17,7 @@ app.use(
   }),
 );
 app.use(bodyParser.json());
+
 
 
 const mongoose = require('mongoose');
@@ -49,15 +52,22 @@ let login = conn2.model('login', loginSchema);
 // let obj = {array : [{id:0,name: "gizi"},{id:1, name: "józsi"},{id:2, name: "bali"},{id:3, name:"dani"}]};
 // let myJSON = JSON.stringify(obj);
 
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace('-', '+').replace('_', '/');
+  return JSON.parse(atob(base64));
+};
 
 
 app.get('/', (req, res) =>{ 
 
 
-            const bearerHeader = req.headers['authorization'];
-              console.log(bearerHeader);
+            const token = req.headers['authorization'];
+              console.log(token);
 
-              jwt.verify(bearerHeader, 'secretkey', (err, authData) => {
+              console.log(parseJwt(token).user.password);
+
+              jwt.verify(token, 'secretkey', (err, authData) => {
                 if(err) {
                   res.sendStatus(403);
                 } else {
@@ -94,9 +104,9 @@ app.post('/login', (req, res) =>{
           if(!person)console.log("nincs ilyen elem");
           else{
                   const user = {
-                    username: person.username,
-                    password: person.password
-                  }
+                    username: data.username,
+                    password: data.password
+                  };
 
                   jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
                     res.json({
