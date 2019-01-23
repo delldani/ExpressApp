@@ -145,25 +145,27 @@ app.post('/login', (req, res) =>{
 app.post('/', function (req, res) {
    
         let data =  req.body;
+        console.log(data.array.length);
+        if(data.array.length > -1)
+        {
+              let todoUser = actualUser(req);
 
-        let todoUser = actualUser(req);
+              for (let i = 0; i < data.array.length; i++) {
+                data.array[i].username = todoUser;
+              }
 
-        for (let i = 0; i < data.array.length; i++) {
-          data.array[i].username = todoUser;
-        }
+              // console.log( data.array[0].name);
+              res.send("ok");
 
-        console.log( data.array[0].name);
-        res.send("ok");
-
-        todo.deleteMany({username : todoUser}, function (err) {
-          if (err) return handleError(err);
-        });
+              todo.deleteMany({username : todoUser}, function (err) {
+                if (err) return handleError(err);
+              });
 
 
-        todo.insertMany(data.array, function(err) {
-          if (err) return handleError(err);
-        });
-
+              todo.insertMany(data.array, function(err) {
+                if (err) return handleError(err);
+              });
+       }
 });
 
 

@@ -56,7 +56,7 @@ module.exports = function(options) {
                                   password: data.password
                                 };
 
-                                jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
+                                jwt.sign({user}, 'secretkey', { expiresIn: '1000s' }, (err, token) => {
                                   res.json({
                                     token
                                   });
