@@ -6,8 +6,6 @@ const express = require('express')
 const app = express()
 const port = 8080
 
-const jwt = require('jsonwebtoken');
-
 const atob = require('atob');
 
 app.use(cors());
@@ -23,7 +21,6 @@ app.use(middleWare())
 
 const mongoose = require('mongoose');
 let conn = mongoose.createConnection('mongodb://localhost:27017/todo', {useNewUrlParser: true});
-let conn2 = mongoose.createConnection('mongodb://localhost:27017/login', {useNewUrlParser: true});
 
 let todoSchema = new mongoose.Schema({
   id : String ,
@@ -32,15 +29,6 @@ let todoSchema = new mongoose.Schema({
 });
 
 let todo = conn.model('todo', todoSchema);
-
-
-let loginSchema = new mongoose.Schema({
-  username : String ,
-  password : String
-});
-
-let login = conn2.model('login', loginSchema);
-
 
 
                                             // let todo = mongoose.model('todo', todoSchema);
@@ -63,13 +51,10 @@ function parseJwt (token) {
 
 function actualUser(req)
 {
-               const token = req.headers['authorization'];
+              const token = req.headers['authorization'];
               console.log(token);
 
-              // console.log(parseJwt(token).user.password);
-
               const todoUser =  parseJwt(token).user.username;
-
              
               return todoUser;
 }
@@ -77,25 +62,15 @@ function actualUser(req)
 
 app.get('/', (req, res) =>{ 
 
-              // const token = req.headers['authorization'];
-
-              let todoUser = actualUser(req);
- 
-              // jwt.verify(token, 'secretkey', (err, authData) => {
-              //   if(err) {
-              //     res.sendStatus(403);
-              //   } else {
+             let todoUser = actualUser(req);
                 
-                  todo.find({username : todoUser},function (err, todo) {
-                    if (err) return console.error(err);
-                    let obj = {array : todo};
-                    let myJSON = JSON.stringify(obj);
-                    res.send(myJSON);
-                  });
+             todo.find({username : todoUser},function (err, todo) {
+                if (err) return console.error(err);
+                let obj = {array : todo};
+                let myJSON = JSON.stringify(obj);
+                res.send(myJSON);
+             });
 
-            //     }
-            // });
-            console.log("lefut");
 });
 
 
@@ -103,36 +78,7 @@ app.get('/', (req, res) =>{
 app.post('/login', (req, res) =>{ 
 
 
-        //   let data =  req.body;
-
-        //   console.log( data.username);
-        //   console.log(data.password);
-          
         
-
-
-
-        // login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
-        //   if (err) return handleError(err);
-        
-        //   if(!person)console.log("nincs ilyen elem");
-        //   else{
-        //           const user = {
-        //             username: data.username,
-        //             password: data.password
-        //           };
-
-        //           jwt.sign({user}, 'secretkey', { expiresIn: '30s' }, (err, token) => {
-        //             res.json({
-        //               token
-        //             });
-        //           });
-
-        //         console.log(person.password);
-        //   }
-
-        // });
-
 
 });
 
@@ -145,8 +91,7 @@ app.post('/login', (req, res) =>{
 app.post('/', function (req, res) {
    
         let data =  req.body;
-        console.log(data.array.length);
-        if(data.array.length > -1)
+        // if(data.array.length > -1)
         {
               let todoUser = actualUser(req);
 
@@ -154,7 +99,6 @@ app.post('/', function (req, res) {
                 data.array[i].username = todoUser;
               }
 
-              // console.log( data.array[0].name);
               res.send("ok");
 
               todo.deleteMany({username : todoUser}, function (err) {

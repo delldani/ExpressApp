@@ -1,8 +1,7 @@
 
 module.exports = function(options) {
   return function(req, res, next) {
-  //   // Implement the middleware function based on the options object
-  //   // res.send("middleware");
+ 
 
     const mongoose = require('mongoose');
     let conn2 = mongoose.createConnection('mongodb://localhost:27017/login', {useNewUrlParser: true});
@@ -19,11 +18,9 @@ module.exports = function(options) {
 
     let data =  req.body;
 
-  //   // console.log( data.username);
-  //   // console.log(data.password);
+    console.log( "felhasználónév - " + data.username);
+    console.log("jelszó - " + data.password);
     
-  //   // res.send("minden ok");
-
     if(req.headers['authorization']){
 
                           const token = req.headers['authorization'];
@@ -34,9 +31,7 @@ module.exports = function(options) {
                               // res.send("nincs authorisation");
                             } else {
                             
-                              console.log("middleware aut ok");
-                              // next();
-
+                              console.log("authorization ok");
                             }
                         });
     }
@@ -47,8 +42,7 @@ module.exports = function(options) {
                       
                         if(!person){
                           res.sendStatus(403);
-                          console.log("nincs ilyen elem middleware");
-                          // res.send("nincs ilyen személy");
+                          console.log("nincs ilyen felhasználó az adatbázisban");
                         }
                         else{
                                 const user = {
@@ -62,7 +56,7 @@ module.exports = function(options) {
                                   });
                                 });
 
-                              console.log(person.password + "rendben a jelszó");
+                              console.log(person.password + " -> rendben a jelszó");
                               // next();
                         }
 
