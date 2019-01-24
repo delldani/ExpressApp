@@ -38,7 +38,7 @@ module.exports = function(options) {
     else{
 
                       login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
-                        if (err) return handleError(err);
+                        if (err) return next(err);
                       
                         if(!person){
                           res.sendStatus(403);
