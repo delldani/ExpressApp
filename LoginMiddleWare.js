@@ -5,16 +5,14 @@
 module.exports = function(options) {
   return function(req, res, next) {
  
-
+    let data =  req.body;
     const jwt = require('jsonwebtoken');
 
-
-    let data =  req.body;
 
     console.log( "felhasználónév - " + data.username);
     console.log("jelszó - " + data.password);
     
-    if(req.headers['authorization']){
+    // if(req.headers['authorization']){}
 
                           const token = req.headers['authorization'];
 
@@ -27,13 +25,10 @@ module.exports = function(options) {
                               console.log("authorization ok");
                             }
                         });
-    }
-    else{
+    
+    
 
-
-}
-
-next();
+    next();
    
   }
 }

@@ -11,7 +11,7 @@ const port = 8080
 const atob = require('atob');
 
 
-
+const jwt = require('jsonwebtoken');
 
     
     
@@ -25,7 +25,7 @@ app.use(
 app.use(bodyParser.json());
 
 const middleWare = require('./LoginMiddleWare.js')
-// app.use(middleWare())
+app.use(middleWare())
 
 const mongoose = require('mongoose');
 let conn = mongoose.createConnection('mongodb://localhost:27017/todo', {useNewUrlParser: true});
@@ -90,45 +90,6 @@ app.get('/',middleWare, (req, res) =>{
 
 
 
-app.post('/login', (req, res) =>{ 
-  let data =  req.body;
-  const jwt = require('jsonwebtoken');
-  
-  login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
-    if (err) return next(err);
-  
-    if(!person){
-      res.sendStatus(403);
-      console.log("nincs ilyen felhasználó az adatbázisban");
-    }
-    else{
-            const user = {
-              username: data.username,
-              password: data.password
-            };
-
-            // jwt.sign({user}, 'secretkey', { expiresIn: '1000s' }, (err, token) => {
-              jwt.sign({user}, 'secretkey',  (err, token) => {
-              res.json({
-                token
-              });
-            });
-
-          console.log(person.password + " -> rendben a jelszó");
-    }
-
-  });
-
-        
-
-});
-
-
-
-
-
-
-
 app.post('/',middleWare, function (req, res) {
    
         let data =  req.body;
@@ -152,6 +113,40 @@ app.post('/',middleWare, function (req, res) {
               });
        }
 });
+
+
+app.post('/login', (req, res) =>{ 
+  let data =  req.body;
+  
+  login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
+    if (err) return next(err);
+  
+    if(!person){
+      res.sendStatus(403);
+      console.log("nincs ilyen felhasználó az adatbázisban");
+    }
+    else{
+            const user = {
+              username: data.username,
+              password: data.password
+            };
+
+            // jwt.sign({user}, 'secretkey', { expiresIn: '1000s' }, (err, token) => {
+              jwt.sign({user}, 'secretkey',  (err, token) => {
+                  
+              res.json({
+                token
+              });
+            });
+
+          console.log(person.password + " -> rendben a jelszó");
+    }
+ 
+  });
+
+});
+
+
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
