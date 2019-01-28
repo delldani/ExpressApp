@@ -2,8 +2,7 @@
 // új branch
 
 
-module.exports = function(options) {
-  return function(req, res, next) {
+module.exports = function(req, res, next) {
  
     let data =  req.body;
     const jwt = require('jsonwebtoken');
@@ -31,4 +30,3 @@ module.exports = function(options) {
     next();
    
   }
-}

@@ -25,7 +25,7 @@ app.use(
 app.use(bodyParser.json());
 
 const middleWare = require('./LoginMiddleWare.js')
-app.use(middleWare())
+// app.use(middleWare())
 
 const mongoose = require('mongoose');
 let conn = mongoose.createConnection('mongodb://localhost:27017/todo', {useNewUrlParser: true});
