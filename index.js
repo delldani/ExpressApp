@@ -1,5 +1,5 @@
 
-// új brancs
+// új branch
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,6 +10,12 @@ const port = 8080
 
 const atob = require('atob');
 
+
+
+
+    
+    
+  
 app.use(cors());
 app.use(
   bodyParser.urlencoded({
@@ -19,10 +25,16 @@ app.use(
 app.use(bodyParser.json());
 
 const middleWare = require('./LoginMiddleWare.js')
-app.use(middleWare())
+// app.use(middleWare())
 
 const mongoose = require('mongoose');
 let conn = mongoose.createConnection('mongodb://localhost:27017/todo', {useNewUrlParser: true});
+let conn2 = mongoose.createConnection('mongodb://localhost:27017/login', {useNewUrlParser: true});
+
+let loginSchema = new mongoose.Schema({
+  username : String ,
+  password : String
+});
 
 let todoSchema = new mongoose.Schema({
   id : String ,
@@ -30,6 +42,7 @@ let todoSchema = new mongoose.Schema({
   username : String
 });
 
+let login = conn2.model('login', loginSchema);
 let todo = conn.model('todo', todoSchema);
 
 
@@ -62,7 +75,7 @@ function actualUser(req)
 }
 
 
-app.get('/', (req, res) =>{ 
+app.get('/',middleWare, (req, res) =>{ 
 
              let todoUser = actualUser(req);
                 
@@ -78,7 +91,33 @@ app.get('/', (req, res) =>{
 
 
 app.post('/login', (req, res) =>{ 
+  let data =  req.body;
+  const jwt = require('jsonwebtoken');
+  
+  login.findOne({ 'username': data.username, 'password': data.password }, 'password', function (err, person) {
+    if (err) return next(err);
+  
+    if(!person){
+      res.sendStatus(403);
+      console.log("nincs ilyen felhasználó az adatbázisban");
+    }
+    else{
+            const user = {
+              username: data.username,
+              password: data.password
+            };
 
+            // jwt.sign({user}, 'secretkey', { expiresIn: '1000s' }, (err, token) => {
+              jwt.sign({user}, 'secretkey',  (err, token) => {
+              res.json({
+                token
+              });
+            });
+
+          console.log(person.password + " -> rendben a jelszó");
+    }
+
+  });
 
         
 
@@ -90,7 +129,7 @@ app.post('/login', (req, res) =>{
 
 
 
-app.post('/', function (req, res) {
+app.post('/',middleWare, function (req, res) {
    
         let data =  req.body;
         // if(data.array.length > -1)
