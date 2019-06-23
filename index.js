@@ -37,7 +37,6 @@ let loginSchema = new mongoose.Schema({
 });
 
 let todoSchema = new mongoose.Schema({
-  id : String ,
   name : String,
   username : String
 });
@@ -93,8 +92,6 @@ app.get('/',middleWare, (req, res) =>{
 app.post('/',middleWare, function (req, res) {
    
         let data =  req.body;
-        // if(data.array.length > -1)
-        {
               let todoUser = actualUser(req);
 
               for (let i = 0; i < data.array.length; i++) {
@@ -111,7 +108,6 @@ app.post('/',middleWare, function (req, res) {
               todo.insertMany(data.array, function(err) {
                 if (err) return handleError(err);
               });
-       }
 });
 
 
