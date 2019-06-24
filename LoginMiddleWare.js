@@ -7,7 +7,7 @@ module.exports = function(req, res, next) {
     let data =  req.body;
     const jwt = require('jsonwebtoken');
 
-
+    console.log('data: '+data);
     console.log( "felhasználónév - " + data.username);
     console.log("jelszó - " + data.password);
     
